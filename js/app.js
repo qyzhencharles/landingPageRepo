@@ -45,6 +45,7 @@ function createNavItem() {
         // This is used to locate the section
         // When being clicked, scroll to the specific section
         navLink.setAttribute('href', `#${section.id}`);
+        navLink.classList.add('.menu__link')
         navLink.textContent = section.dataset.nav;
         navItem.appendChild(navLink);
         navBar.appendChild(navItem);
