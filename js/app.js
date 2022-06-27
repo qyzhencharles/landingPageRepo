@@ -30,14 +30,10 @@
  * 
 */
 
-// judge if the element is inside viewport
-function isInViewport(element) {
-    const rect = element.getBoundingClientRect();
-    return rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth) &&
-    rect.top >= 0 && rect.left >=0;
-}
 
+
+
+// create new nav item for new section
 function createNavItem() {
     sections.forEach(section => {
         let navItem = document.createElement('li');
@@ -45,7 +41,7 @@ function createNavItem() {
         // This is used to locate the section
         // When being clicked, scroll to the specific section
         navLink.setAttribute('href', `#${section.id}`);
-        navLink.classList.add('.menu__link')
+        navLink.classList.add('menu__link');
         navLink.textContent = section.dataset.nav;
         navItem.appendChild(navLink);
         navBar.appendChild(navItem);
@@ -55,6 +51,30 @@ function createNavItem() {
             section.scrollIntoView({behavior:'smooth'});
         })
     })
+}
+
+// calculating when section is active
+function makeActiveSection() {
+    sections.forEach((section)=>{
+        const elementOffset = section.getBoundingClientRect();
+        if(elementOffset.top <= 150 && elementOffset.bottom >= 150) {
+            setActive(section);
+        } else {
+            removeActive(section);
+        }
+    })
+}
+
+// set section to active
+function setActive(section) {
+    const id = section.getAttribute('id');
+    document.getElementById(`${id}`).classList.add('your-active-class');
+}
+
+// disable active on section
+function removeActive(section) {
+    const id = section.getAttribute('id');
+    document.getElementById(`${id}`).classList.remove('your-active-class');
 }
 
 
@@ -76,6 +96,8 @@ sections.forEach(section => {
 })
 createNavItem();
 
+document.addEventListener('scroll', makeActiveSection);
+
 
 
 
@@ -95,9 +117,12 @@ createNavItem();
 
 
 // Add class 'active' to section when near top of viewport
-document.addEventListener('scroll', active);
+document.addEventListener('scroll', setActive);
 
-function active() {
+function setActive() {
+    for (let section of sections) {
+        section.classList.remove('your-acive-class')
+    }
     for (let section of sections) {
         if(isInViewport(section)) {
             document.querySelector(`a[href='#${section.id}']`).classList.add("active");
